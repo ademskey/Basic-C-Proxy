@@ -1,0 +1,32 @@
+// Commands I used to test my proxy during development (aside from browsing internet with firefox)
+
+Telnet & NC:
+GET http://127.0.0.1:1235/cgi-bin/adder?10&20 HTTP/1.0
+
+Curl:
+curl -v --proxy http://localhost:1236 http://localhost:1235/home.html
+
+
+
+GET /cgi-bin/adder?10&20 HTTP/1.0 (Use this to go straight to tiny server)
+
+idea for accepting client headers I couldn't implement
+    if (strcmp(rio.rio_bufptr, "") != 0) { // Check if the client provided headers
+        printf("Client provided headers:\n");
+        // Iterate over client-provided headers
+        while (Rio_readlineb(&rio, buf, MAXLINE) != 0) {
+            if (strcmp(buf, "\r\n") == 0) {
+                // End of headers
+                break;
+            } else if (strncasecmp(buf, host_hdr, strlen(host_hdr)) == 0) {
+                // Client Host header
+                strcat(header, buf);
+            } else if (strncasecmp(buf, "Client Agent:", strlen("User-Agent:")) == 0) {
+                // Client provides  Agent header
+                strcat(header, buf);
+            } else {
+                // Other headers provided by the client
+                strcat(header, buf);
+            }
+        }
+    }
